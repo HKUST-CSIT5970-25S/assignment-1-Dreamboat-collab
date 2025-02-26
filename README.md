@@ -23,10 +23,12 @@
 
     | Size        | CPU performance | Memory performance |
     | ----------- | --------------- | ------------------ |
-    | `t2.micro` | PROCESSOR:    Intel Xeon E5-2686 v4<br/>Core Count:     1<br/>Extensions:       SSE 4.2 + AVX2 + AVX + RDRAND + FSGSBASE<br/>Cache Size:   45 MB<br/>Microcode:   0xd0003f6<br/>Core Family: Broadwell | Memory: 1024MB<br/>Operating System: Ubuntu 22.04 |
-    | `t2.medium`  | PROCESSOR:  Intel Xeon E5-2686 v4<br/>Core Count:     2<br/>Extensions:      SSE 4.2 + AVX2 + AVX + RDRAND + FSGSBASE<br/>Cache Size:      45 MB<br/>Microcode:      0xd0003f6<br/>Core Family:    Broadwell | Memory: 4096MB<br/>Operating System: Ubuntu 22.04 |
-    | `c5d.large` | PROCESSOR:  Intel Xeon Platinum 8275CL<br/>Core Count:    1<br/>Thread Count:   2<br/>Extensions:   SSE 4.2 + AVX512CD + AVX2 + AVX + RDRAND + FSGSBASE<br/> Cache Size:    35.8 MB<br/> Microcode:  0x5003801<br/> Core Family:  Cascade Lake | Memory: 4096MB<br/>Operating System: Ubuntu 22.04 |
+    | `t2.micro` | 3768 MIPS | 10749.88 MB/s |
+    | `t2.medium`  | 8766 MIPS | 18617.56 MB/s |
+    | `c5d.large` | 7394 MIPS | 14751.28 MB/s |
 
+    > Memory performance: As memory capacity increases, memory performance improves. t2.medium has the highest memory performance (18617.56 MB/s), and its memory resources are 4GB. Although both t2.micro and c5d.large have 4GB of memory, c5d.large has better memory performance than t2.micro (14751.28 MB/s vs. 10749.88 MB/s).
+    >
     > Region: US East (N. Virginia). Use `Ubuntu Server 22.04 LTS (HVM)` as AMI.
 
 ## Question 2: Measure the EC2 Network performance
@@ -42,6 +44,9 @@
     | `m5.large` - `c5n.large`  | 3850           | 0.189    |
     | `m5.large` - `t3.medium`  | 3720           | 0.245    |
 
+    > In the same region, TCP bandwidth varies greatly between instance types. The bandwidth provided by m5.large instances (4950 Mbps) is higher than that provided by t3.medium (4200 Mbps), but the bandwidth provided by c5n.large (1840 Mbps) is relatively low.
+    > In terms of RTT, m5.large and t3.medium have lower latency, while c5n.large shows higher latency.
+    >
     > Region: US East (N. Virginia). Use `Ubuntu Server 22.04 LTS (HVM)` as AMI. Note: Use private IP address when using iPerf within the same region. You'll need iPerf for measuring TCP bandwidth and Ping for measuring Round-Trip time.
 
 2. (1 mark) What about the network performance for instances deployed in different regions? In order to answer this question, you need to complete the following table.
@@ -52,4 +57,7 @@
     | N. Virginia - N. Virginia | 1840           | 0.733    |
     | Oregon - Oregon           | 4930           | 0.157    |
 
+    > N. Virginia - Oregon has very low TCP bandwidth (22.5 Mbps) and high latency (57.014 ms), indicating poor performance for cross-region communication.
+    > Within the same region, N. Virginia - N. Virginia and Oregon - Oregon have higher TCP bandwidths of 1840 Mbps and 4930 Mbps, respectively, and latencies of 0.733 ms and 0.157 ms, respectively, indicating better network performance within the same region.
+    >
     > Region: US East (N. Virginia), US West (Oregon). Use `Ubuntu Server 22.04 LTS (HVM)` as AMI. All instances are `c5.large`. Note: Use public IP address when using iPerf within the same region.
